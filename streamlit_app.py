@@ -30,8 +30,8 @@ st.header('Fruityvice Fruit Advice!')
 
 import requests as req
 
-fruityvice_response = req.get("https://fruityvice.com/api/fruit/watermelon")
-st.text(fruityvice_response.json()) # just writes the data to the screen
+fruityvice_response = req.get("https://fruityvice.com/api/fruit/" + "kiwi")
+# st.text(fruityvice_response.json()) # just writes the data to the screen
 
 # take the json version of the response and normalize it 
 
