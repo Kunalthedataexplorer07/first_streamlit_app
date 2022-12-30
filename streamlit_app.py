@@ -49,7 +49,38 @@ try:
 except URLError as e:
   st.error()
     
+# Snowflake related functions
+def get_fruit_load_list():
+    with my_cnx.cursor() as my_cur:
+        my_cur.execute("SELECT * FROM fruit_load_list")
+        return my_cur.fetchall()
+# Add button to load the fruit list
+if st.button('Get Fruit Load List'):
+    my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+    my_data_row = get_fruit_load_list()
+    st.dataframe(my_data_row)
 
+#Dont run anything past here while we are troubleshooting
+
+st.stop()
+    
+# Allow user to add fruits to the list
+def insert_row_snowflake(new_fruit):
+    with my_cnx.cursor() as my_cur:
+        my_cur.execute("INSERT INTO fruit_load_list values ('from streamlit')")
+        return "Thanks for adding "+  new_fruit
+    
+add_my_fruit = st.text_input('What fruit would you like to add?')
+
+if st.button('Add a Fruit to List'):
+    my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+    back_from_function = insert_row_snowflake(add_my_fruit)
+    st.text(back_from_function)
+    
+st.write('Thank you for adding ',add_my_fruit)
+
+#This will not work correctly, but just go with it for now 
+# my_cur.execute("INSERT INTO fruit_load_list values ('from streamlit')")
   # fruit_choice = st.text_input('What fruit would you like information about?','Kiwi')
   
 # st.write('The user entered ', fruit_choice)
@@ -68,31 +99,11 @@ except URLError as e:
 # Added snowflake connector lib
 
 # import snowflake.connector
-my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
-my_cur = my_cnx.cursor()
-my_cur.execute("SELECT * FROM fruit_load_list")
-my_data_row = my_cur.fetchall()
-st.header("Fruit Load list contains:")
+#my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+#my_cur = my_cnx.cursor()
+#my_cur.execute("SELECT * FROM fruit_load_list")
+#my_data_row = my_cur.fetchall()
+#st.header("Fruit Load list contains:")
 
-# Snowflake related functions
-def get_fruit_load_list():
-    with my_cnx.cursor() as my_cur:
-        my_cur.execute("SELECT * FROM fruit_load_list")
-        return my_cur.fetchall()
-# Add button to load the fruit list
-if st.button('Get Fruit Load List'):
-    my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
-    my_data_row = get_fruit_load_list()
-    st.dataframe(my_data_row)
 
-#Dont run anything past here while we are troubleshooting
-
-st.stop()
-    
-# Allow user to add fruits to the list
-
-add_my_fruit = st.text_input('What fruit would you like to add?','jackfruit')
-st.write('Thank you for adding ',add_my_fruit)
-
-#This will not work correctly, but just go with it for now 
-my_cur.execute("INSERT INTO fruit_load_list values ('from streamlit')")
+# add_my_fruit = st.text_input('What fruit would you like to add?','jackfruit')
